@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin panel</title>
+    <link rel="stylesheet" href="css/admin.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <h1 class="main-text">Hello</h1>
+      <form id="authForm">
+        <label for="login">Login:</label>
+        <input type="text" id="login" placeholder="Enter login" required />
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter password"
+          required
+        />
+        <button type="button" onclick="authenticate()">Login</button>
+      </form>
+      <form id="dataForm" style="display: none">
+        <label for="title">Title:</label>
+        <input type="text" id="title" placeholder="Enter title" required />
+        <label for="number">Number:</label>
+        <input type="number" id="number" placeholder="Enter number" required />
+        <label for="difficulty">Difficulty:</label>
+        <input
+          type="number"
+          id="difficulty"
+          placeholder="Enter difficulty"
+          required
+        />
+        <label for="answer">Answer:</label>
+        <textarea
+          name=""
+          id="answer"
+          cols="30"
+          rows="10"
+          placeholder="answer"
+        ></textarea>
+        <label for="language">Language:</label>
+        <input
+          type="text"
+          id="language"
+          placeholder="Enter language"
+          required
+        />
+        <button type="button" id="postData">Save</button>
+      </form>
+      <h2>Data List:</h2>
+      <ul id="dataList"></ul>
+    </div>
+    <script src="js/admin.js"></script>
+    <script>
+      async function authenticate() {
+        const login = document.getElementById("login").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          const response = await fetch("/authenticate", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ login, password }),
+          });
+          console.log(response);
+
+          const result = await response.json();
+          if (response.ok) {
+            // Показываем форму с данными после успешной аутентификации
+            document.getElementById("authForm").style.display = "none";
+            document.getElementById("dataForm").style.display = "block";
+            console.log(result.ok);
+            // Загружаем данные после аутентификации
+            fetchData();
+          } else {
+            alert("Authentication failed. Please try again.");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+    </script>
+  </body>
+</html>
+
+<!--     function handleDelete(postId) {
+        deleteQuestion(postId);
+    } -->
